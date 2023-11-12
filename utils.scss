@@ -1,0 +1,108 @@
+//Functions
+
+//Unit Conversion
+@function em($pixels, $rem: false) {
+    $prefix: "em";
+
+    @if ($rem) {
+        $prefix: "rem";
+    }
+
+    @return #{calc($pixels / 16)}#{$prefix};
+}
+
+$devices: (
+    phone: 480px,
+    tablet: 768px,
+    desktop: 992px,
+    large-desktop: 1200px,
+    extra-large-desktop: 1400px
+);
+
+@mixin min-device($device: map-get($devices, "phone")) {
+    @if map-has-key($devices, $device) {
+        @media screen and (min-width: map-get($devices, $device)) {
+            @content;
+        }
+    }
+}
+
+@mixin max-device($device: map-get($devices, "phone")) {
+    @if map-has-key($devices, $device) {
+        @media screen and (max-width: map-get($devices, $device) - 1) {
+            @content;
+        }
+    }
+}
+
+@mixin only-device($device: map-get($devices, "phone")) {
+    @if map-has-key($devices, $device) {
+        $devices-length: length($devices);
+        $map-list: map-keys($devices);
+
+        @if index($map-list, $device) ==$devices-length {
+            @include min-device($device) {
+                @content;
+            }
+        } @else {
+            $next-device-index: index($map-list, $device) + 1;
+            $next-device-key: nth($map-list, $next-device-index);
+
+            @media screen and (min-width: map-get($devices, $device)) and (max-width: map-get($devices, $next-device-key) - 1) {
+                @content;
+            }
+        }
+    }
+}
+
+@mixin between-devices(
+    $min-device: map-get($devices, "phone"),
+    $max-device: map-get($devices, "tablet")
+) {
+    @if map-has-key($devices, $min-device) and map-has-key($devices, $max-device) {
+        @media screen and (min-width: map-get($devices, $min-device)) and (max-width: map-get($devices, $max-device) - 1) {
+            @content;
+        }
+    }
+}
+
+//Radius Mixin
+@mixin radius($val) {
+    border-radius: $val;
+    -webkit-border-radius: $val;
+    -moz-border-radius: $val;
+}
+
+//Transition Mixin
+@mixin transition($val) {
+    -webkit-transition: $val;
+    -moz-transition: $val;
+    -ms-transition: $val;
+    -o-transition: $val;
+    transition: $val;
+}
+
+//Shadow Mixin
+@mixin shadow($val) {
+    -webkit-box-shadow: $val;
+    box-shadow: $val;
+}
+
+//Classess Generator
+@mixin generateUtilClass($prefix, $property, $rem: false) {
+    $max_number: 250;
+
+    @if $property== "font-size" {
+        $max_number: 50;
+    }
+
+    @for $i from 0 through $max_number {
+        .#{$prefix}-#{$i} {
+            #{$property}: em($i, $rem);
+        }
+    }
+}
+
+//Colors
+$primary: #15092a;
+$secondary: #3c2b5b;
