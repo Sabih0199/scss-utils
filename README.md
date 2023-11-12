@@ -45,7 +45,7 @@ Prepend utils.scss file in your project config e.g vite.config, next.config
     }
 ```
 
-Now, you can use predefined $variables, functions or mixins written in this file. You dont't need import statements in any other scss file to use variables, mixings or functions.
+Now, you can use predefined $variables, functions or mixins written in this file. You don't need import statements in any other scss file to use variables, mixings or functions.
 
 ```scss
 ==> This will generate my-fs-0 to my-fs-50 in em unit
